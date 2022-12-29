@@ -1,0 +1,16 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    username: root
+    password: '12345'
+    url: jdbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+mybatis_plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
