@@ -6,8 +6,12 @@
                     <h1>学生管理系统</h1>
                     <el-button type="primary" @click="getStudents">获取学生信息</el-button>
                     <el-button type="warning" @click="dialogVisible = true">添加学生</el-button>
-                    <el-input type="text" placeholder="请输入姓名" class="w-25" v-model="search_name"/>
-                    <el-button type="success" @click="search">搜索</el-button>
+
+                    <el-input type="text" placeholder="请输入姓名" style="width: 200px" v-model="query.name" />
+                    <el-input type="text" placeholder="请输入年龄" style="width: 200px" v-model="query.age" />
+                    <el-input type="text" placeholder="请输入性别" style="width: 200px" v-model="query.gender" />
+
+                    <el-button type="success" @click="getStudents">搜索</el-button>
 
                     <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
                         <div>添加学生信息</div>
@@ -45,6 +49,14 @@
                     <Student v-for="stu in students" :key="stu.id" :student="stu"></Student>
                 </tbody>
             </table>
+
+            <div class="text-cent">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                    :current-page="this.query.page" :page-sizes="[5, 10, 20, 30]" :page-size="this.query.size"
+                    layout="total, sizes, prev, pager, next, jumper" :total="this.total">
+                </el-pagination>
+            </div>
+
         </div>
     </div>
 </template>
@@ -59,6 +71,15 @@ export default {
     },
     data() {
         return {
+            total: 0,
+            query: {
+                page: 1,
+                size: 5,
+                name: "",
+                age: "",
+                gender: ""
+            },
+
             students: [],
             dialogVisible: false,
             newStudent: {
@@ -69,16 +90,40 @@ export default {
             }
         }
     },
+    mounted() {
+        this.getStudents();
+    },
     methods: {
         getStudents() {
             axios({
                 url: "http://localhost:8080/students",
                 method: 'GET',
+                params: {
+                    page: this.query.page,
+                    size: this.query.size,
+                    name: this.query.name,
+                    age: this.query.age,
+                    gender: this.query.gender
+                }
             }).then(res => {
-                // console.log(res.data);
-                this.students = res.data;
+                console.log(res);
+                this.students = res.data.content.list;
+                this.total = res.data.content.total;
             })
         },
+
+
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+            this.query.size = val;
+            this.getStudents();
+        },
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+            this.query.page = val;
+            this.getStudents();
+        },
+
         handleClose(done) {
             this.$confirm('确认关闭？')
                 .then(() => {
@@ -93,17 +138,7 @@ export default {
                 data: this.newStudent
             })
             this.dialogVisible = false
-        },
-        search() {
-            axios({
-                url: "http://localhost:8080/search",
-                method: "POST",
-                data: {
-                    name: this.search_name
-                }
-            }).then(res => {
-                this.students = res.data;
-            })
+            this.getStudents();
         }
     }
 }

@@ -3,8 +3,8 @@ server:
 spring:
   datasource:
     username: root
-    password: '12345'
-    url: jdbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8&serverTimezone=UTC
+    password: '123456'
+    url: jdbc:mysql://127.0.0.1:3306/smedi_draft_test?characterEncoding=UTF-8&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     pathmatch:
