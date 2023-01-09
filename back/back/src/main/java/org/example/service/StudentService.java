@@ -14,4 +14,5 @@ public interface StudentService extends IService<Student> {
 
     void updateStudent(Student student);
 
+    Student getStudent(Integer number, String name);
 }

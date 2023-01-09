@@ -1,6 +1,7 @@
 package org.example.controller;
 
 
+import com.google.gson.Gson;
 import org.example.pojo.Student;
 import org.example.req.StudentReq;
 import org.example.resp.CommonResp;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 public class Controller {
     @Autowired
     private StudentService studentService;
+
+    private Gson gson = new Gson();
 
     @GetMapping("/students")
     public CommonResp getStudents(StudentReq studentReq) {
@@ -37,5 +40,11 @@ public class Controller {
     @PostMapping("/update")
     public void updateStudent(@RequestBody Student student) {
         studentService.updateStudent(student);
+    }
+
+    @GetMapping("/student/{number}/{name}")
+    public String getstudent(@PathVariable Integer number, @PathVariable String name) {
+        Student student = studentService.getStudent(number, name);
+        return gson.toJson(student);
     }
 }

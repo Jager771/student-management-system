@@ -54,4 +54,13 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         studentMapper.updateById(student);
     }
 
+    @Override
+    public Student getStudent(Integer number, String name) {
+
+        LambdaQueryWrapper<Student> studentQueryWrapper = new LambdaQueryWrapper<>();
+        studentQueryWrapper.eq(!(number == null), Student::getNumber, number)
+                .eq(!(name == null || "".equals(name)), Student::getName, name);
+        return studentMapper.selectOne(studentQueryWrapper);
+    }
+
 }
